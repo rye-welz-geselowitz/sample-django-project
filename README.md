@@ -1,6 +1,6 @@
 Creat virtual enviornment: `python3 -m venv my-venv`
 
-Activate virtua environment: `source venv my-venv/bin/activate`
+Activate virtua environment: `source my-venv/bin/activate`
 
 Install requirements `pip install -r requirements.txt`
 
