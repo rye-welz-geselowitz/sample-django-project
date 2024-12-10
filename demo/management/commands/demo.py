@@ -81,26 +81,26 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         maybe_populate()
 
-        print('\n\nFetching small number of titles - we do not expect to see much difference in performance')
+        print('\n\nFetching small number of titles')
         compare_function_runtimes(
-            get_books_by_title,
             get_books_by_title_bulk,
+            get_books_by_title,
             ['Things Fall Apart', 'The Vegetarian']
         )
 
 
 
-        print('\n\nFetching large number of titles - we do expect a difference in performance')
+        print('\n\nFetching large number of titles')
         compare_function_runtimes(
-            get_books_by_title,
             get_books_by_title_bulk,
+            get_books_by_title,
             [f'Book {i}' for i in range(5000)]
         )
 
 
-        print('\n\nFetching single book - we do expect a difference in performance')
+        print('\n\nFetching single book')
         compare_function_runtimes(
-            get_book_by_title_without_index,
             get_book_by_title,
+            get_book_by_title_without_index,
             'Book 5001'
         )
