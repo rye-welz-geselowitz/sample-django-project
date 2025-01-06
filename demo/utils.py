@@ -21,6 +21,35 @@ def compare_function_runtimes(f1, f2, *args, **kwargs):
     print(f'{faster.__name__} was {(slower_ms / faster_ms):.0f} times faster than {slower.__name__} '
           f'({faster_ms:.01f} milliseconds vs. {slower_ms:.01f} milliseconds)')
 
+def compare_runtimes_and_results(f1, f2, *args, **kwargs):
+    def _get_results_and_runtime_ms(f):
+        start_dt = datetime.now()
+        res = f(*args, **kwargs)
+        miliseconds = (datetime.now() - start_dt).total_seconds() * 1000 
+        return (res, miliseconds)
+    
+    (f1_res, f1_ms) = _get_results_and_runtime_ms(f1)
+    (f2_res, f2_ms) = _get_results_and_runtime_ms(f2)
+
+    print(f'\nComparing {f1.__name__} and {f2.__name__}')
+    print(f'Results were {"" if f1_res == f2_res else "NOT "}the same')
+    if f1_res != f2_res:
+        for (f, res) in [
+            (f1, f1_res),
+            (f2, f2_res),
+        ]:
+            print(f'{f.__name__} -  {str(res)[:100]}{"..." if len(str(res)) > 100 else ""}')
+       
+
+    [(faster, faster_ms), (slower, slower_ms)] = sorted(
+        [(f1, f1_ms), (f2, f2_ms)],
+        key=lambda x: x[1]
+    )
+
+    speed_comparison = 'infinitely' if faster_ms == 0 else f'{(slower_ms / faster_ms):.0f} times'
+
+    print(f'{faster.__name__} was {speed_comparison} faster than {slower.__name__} '
+          f'({faster_ms:.01f} milliseconds vs. {slower_ms:.01f} milliseconds)')
 
 def maybe_populate():
     book_count = Book.objects.count()

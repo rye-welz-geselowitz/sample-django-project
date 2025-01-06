@@ -8,7 +8,8 @@ Create database: `createdb demodb` (assumes postgres is already installed)
 
 Migrate database:`python manage.py migrate`
 
-Run test script: `python manage.py demo`
+Run script: `python manage.py demo` OR `python manage.py optimize_me`
+
 
 
 # Tips for efficient ORM usage
