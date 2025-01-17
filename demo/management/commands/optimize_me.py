@@ -62,7 +62,7 @@ def get_book_intros(book_ids):
 
 def get_book_intros_OPTIMIZED(book_ids):
     # TODO: optimize (prefetch related or select related)
-    books = Book.objects.filter(id__in=book_ids).select_related('author').values('title', 'page_count', 'author__name')
+    books = Book.objects.filter(id__in=book_ids).select_related('author')
     intros = [
         f'{book.title} is by {book.author.name} and has {book.page_count} pages'
         for book in books
