@@ -57,7 +57,7 @@ def get_book_intros(book_ids):
     for book_id in book_ids: 
         book = Book.objects.get(id=book_id) 
         author = Author.objects.filter(id=book.author_id).first()
-        intros.append(f'{book.title} is by {author.name} and has {book.page_count} pages') # annotate lol
+        intros.append(f'{book.title} is by {author.name} and has {book.page_count} pages') 
     return intros
 
 def get_book_intros_OPTIMIZED(book_ids):
