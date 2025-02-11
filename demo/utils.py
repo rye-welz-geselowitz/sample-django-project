@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import date, datetime
 
-from demo.models import Author, Book
+from demo.models import Author, Book, Genre
 
 # UTILITY FUNCTIONS
 
@@ -53,25 +53,58 @@ def compare_runtimes_and_results(f1, f2, *args, **kwargs):
 
 def maybe_populate():
     book_count = Book.objects.count()
-    if book_count > 0:
+    genre_count = Genre.objects.count()
+    if book_count > 0 and genre_count > 0:
         return 
     
+    print('Clearing database')
+    Genre.objects.all().delete()
+    Book.objects.all().delete()
+    Author.objects.all().delete() 
+
     print('Populating database!')
+
+    for genre_name in ['Sci fi', 'Fantasy', 'Horror', 'Lit Fic']:
+        genre = Genre(name=genre_name)
+        genre.save()
     
-    for (author_name, title, page_count) in [
-        ('JRR Tolkien', 'Return of the King', 504),
-        ('Chinua Achebe', 'Things Fall Apart', 301),
-        ('Han Kang', 'The Vegetarian', 200)
+    for (author_name, title, page_count, genre_names) in [
+        ('JRR Tolkien', 'Return of the King', 504, ['Fantasy']),
+        ('Chinua Achebe', 'Things Fall Apart', 301, ['Lit Fic']),
+        ('Han Kang', 'The Vegetarian', 200, ['Lit Fic', 'Horror'])
     ]:
+        genres = Genre.objects.filter(name__in=genre_names).all()
         author = Author(name=author_name)
         author.save()
-        book = Book(title=title, title_without_index=title, page_count=page_count, author=author)
+        book = Book(title=title, title_without_index=title,
+            page_count=page_count, author=author
+        )
+        book.save()
+        book.genres.set(genres)
+    
+    # Add an author with multiple books
+    author = Author(name='Author McAuthor')
+    author.save()
+    for (title, publication_date, page_count) in [
+        ('Apple Book', date(2016, 5, 1), 100),
+        ('Banana Book', date(2018, 10, 10), 200),
+        ('Pear Book', date(2020, 12, 1), 155),
+    ]:
+        book = Book(title=title, title_without_index=title,
+            page_count=page_count, author=author,
+            publication_date=publication_date
+        )
         book.save()
 
-
     for i in range(100_000):
+        genres = Genre.objects.filter(name__in=['Lit Fic']).all()
         title = f'Book {i}'
         author = Author(name=f'Author {i}')
         author.save()
-        book = Book(title=title, title_without_index=title, page_count=100, author=author)
+        book = Book(title=title,
+            title_without_index=title,
+            page_count=100,
+            author=author
+        )
         book.save()  
+        book.genres.set(genres)

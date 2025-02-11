@@ -8,7 +8,10 @@ class Author(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class Genre(models.Model):
+    name = models.CharField(max_length=255)
+
 class Book(models.Model):
     # NOTE: We have separate `title` and `title_without_index` fields
     # for educational purposes only. In real life we would only keep 
@@ -19,6 +22,7 @@ class Book(models.Model):
     page_count = models.IntegerField()
     publication_date = models.DateField(null=True, blank=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+    genres = models.ManyToManyField(Genre)
 
     def __str__(self):
         return self.title
